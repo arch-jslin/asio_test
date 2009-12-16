@@ -1,0 +1,20 @@
+namespace net
+
+all the mainX.cpps are previous boost::asio API tests.
+the current testing unit is in rudp_main.cpp.
+
+class Peer; 
+/* This may very well be renamed. 
+   This class will be the real interface that application code uses.
+   Currently it serves as a testing unit.   */
+
+namespace net::detail
+
+class Connection;
+/* This class currently supports basic concept of a virtual connection over two UDP sockets.
+   Implementation of the reliability system and the congestion control are in progress. */
+   
+These codes are mainly for my own library usage, if you are interested then help yourself. 
+However, please proceed with caution. If you want to know more about it I suggest you
+check out this website: http://gafferongames.com/networking-for-game-programmers/
+It's the place from which most of my implementations orignated.
