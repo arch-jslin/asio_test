@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="asio_test" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin\Release\asio_test" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-ansi" />
+					<Add option="-D_WIN32_WINNT=0x0501" />
+					<Add option="-DBOOST_ASIO_DISABLE_IOCP" />
+					<Add option="-DBOOST_HAS_GCC_TR1" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="boost_date_time-mgw44-mt-1_40" />
+					<Add library="boost_system-mgw44-mt-1_40" />
+					<Add library="boost_thread-mgw44-mt-1_40" />
+					<Add library="wsock32" />
+					<Add library="ws2_32" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="helper.hpp" />
+		<Unit filename="main.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main2.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main3.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main4.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main5.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main6.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main7.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main8.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main9.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="ptime_main.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="realman.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="rudp_congestion_control.cpp" />
+		<Unit filename="rudp_congestion_control.hpp" />
+		<Unit filename="rudp_connection.cpp" />
+		<Unit filename="rudp_connection.hpp" />
+		<Unit filename="rudp_main.cpp" />
+		<Unit filename="rudp_packet.hpp" />
+		<Unit filename="rudp_reliability_system.cpp" />
+		<Unit filename="rudp_reliability_system.hpp" />
+		<Unit filename="tcp_server.hpp" />
+		<Unit filename="tcp_server_custom.hpp" />
+		<Unit filename="udp_server.hpp" />
+		<Unit filename="udp_server_custom.hpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

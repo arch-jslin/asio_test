@@ -1,0 +1,157 @@
+# depslib dependency file v1.0
+1248578138 source:d:\codeblocks\asio_test\main.cpp
+	<iostream>
+	<tr1/functional>
+	<boost/asio.hpp>
+	<boost/date_time/posix_time/posix_time.hpp>
+
+1258193671 source:d:\codeblocks\asio_test\main2.cpp
+	<iostream>
+	<tr1/functional>
+	<boost/asio.hpp>
+	<boost/thread.hpp>
+	<boost/date_time/posix_time/posix_time.hpp>
+
+1248580922 source:d:\codeblocks\asio_test\main3.cpp
+	<iostream>
+	<boost/array.hpp>
+	<boost/asio.hpp>
+
+1248590711 source:d:\codeblocks\asio_test\main5.cpp
+	<ctime>
+	<iostream>
+	<string>
+	<tr1/functional>
+	<tr1/memory>
+	<boost/enable_shared_from_this.hpp>
+	<boost/asio.hpp>
+
+1248591755 source:d:\codeblocks\asio_test\main6.cpp
+	<iostream>
+	<boost/array.hpp>
+	<boost/asio.hpp>
+
+1248592348 source:d:\codeblocks\asio_test\main7.cpp
+	<ctime>
+	<iostream>
+	<string>
+	<tr1/functional>
+	<tr1/memory>
+	<boost/array.hpp>
+	<boost/asio.hpp>
+
+1251723512 source:d:\codeblocks\asio_test\main9.cpp
+	"udp_server_custom.hpp"
+	"tcp_server.hpp"
+	<windows.h>
+
+1251723366 d:\codeblocks\asio_test\udp_server_custom.hpp
+	<ctime>
+	<iostream>
+	<string>
+	<tr1/functional>
+	<tr1/memory>
+	<boost/array.hpp>
+	<boost/asio.hpp>
+	<sstream>
+	"helper.hpp"
+	<windows.h>
+
+1259178502 d:\codeblocks\asio_test\helper.hpp
+	<string>
+	<ctime>
+	<windows.h>
+
+1248594970 d:\codeblocks\asio_test\tcp_server_custom.hpp
+	<ctime>
+	<iostream>
+	<string>
+	<tr1/functional>
+	<tr1/memory>
+	<boost/enable_shared_from_this.hpp>
+	<boost/asio.hpp>
+	"helper.hpp"
+
+1248593117 d:\codeblocks\asio_test\udp_server.hpp
+	<ctime>
+	<iostream>
+	<string>
+	<tr1/functional>
+	<tr1/memory>
+	<boost/array.hpp>
+	<boost/asio.hpp>
+	"helper.hpp"
+
+1248593124 d:\codeblocks\asio_test\tcp_server.hpp
+	<ctime>
+	<iostream>
+	<string>
+	<tr1/functional>
+	<tr1/memory>
+	<boost/enable_shared_from_this.hpp>
+	<boost/asio.hpp>
+	"helper.hpp"
+
+1258144864 source:d:\codeblocks\asio_test\rvalue.cpp
+	<iostream>
+	<utility>
+	<tr1/functional>
+	<boost/bind.hpp>
+
+1259992630 source:d:\codeblocks\asio_test\realman.cpp
+	<iostream>
+	<string>
+	<tr1/functional>
+	<tr1/memory>
+	<boost/asio.hpp>
+	<boost/algorithm/string.hpp>
+	<boost/thread/thread.hpp>
+	<boost/thread/mutex.hpp>
+	<boost/lexical_cast.hpp>
+	<boost/date_time/posix_time/posix_time.hpp>
+	"helper.hpp"
+
+1260981337 source:d:\codeblocks\asio_test\rudp_connection.cpp
+	"helper.hpp"
+	"rudp_packet.hpp"
+	"rudp_connection.hpp"
+	<sstream>
+	<algorithm>
+
+1259132061 source:d:\codeblocks\asio_test\rudp_flow_control.cpp
+	<iostream>
+	"rudp_flow_control.hpp"
+
+1259132033 d:\codeblocks\asio_test\rudp_flow_control.hpp
+
+1259129876 source:d:\codeblocks\asio_test\rudp_reliability_system.cpp
+
+1259166904 source:d:\codeblocks\asio_test\ptime_main.cpp
+	<iostream>
+	<boost/date_time/posix_time/posix_time.hpp>
+
+1260981100 d:\codeblocks\asio_test\rudp_connection.hpp
+	<tr1/functional>
+	<tr1/memory>
+	<boost/asio.hpp>
+	<boost/thread/thread.hpp>
+	<boost/date_time/posix_time/posix_time.hpp>
+	<windows.h>
+
+1260899283 d:\codeblocks\asio_test\rudp_packet.hpp
+
+1260984533 source:d:\codeblocks\asio_test\rudp_main.cpp
+	<iostream>
+	<boost/algorithm/string.hpp>
+	"rudp_congestion_control.hpp"
+	"rudp_connection.hpp"
+	"rudp_reliability_system.hpp"
+
+1259132602 d:\codeblocks\asio_test\rudp_reliability_system.hpp
+
+1260985517 d:\codeblocks\asio_test\rudp_congestion_control.hpp
+
+1260984623 source:d:\codeblocks\asio_test\rudp_congestion_control.cpp
+	<iostream>
+	"rudp_congestion_control.hpp"
+

@@ -1,0 +1,13 @@
+#ifndef _SHOOTINC_CUBES_NET_DETAIL_RUDP_RELIABILITY_SYSTEM_
+#define _SHOOTINC_CUBES_NET_DETAIL_RUDP_RELIABILITY_SYSTEM_
+
+namespace net {
+namespace detail {
+
+
+
+} //net
+} //detail
+
+#endif //_SHOOTINC_CUBES_NET_DETAIL_RUDP_CONNECTION_
+
