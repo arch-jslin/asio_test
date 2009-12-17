@@ -14,9 +14,6 @@
 //executed at the same time. (must beware of those read/write on buffers as well)
 //But for now I try not to add complexity by introducing mutex and lock here.
 
-//Now we need to add our protocol id and distinguish real-world messages from
-//low-level protocol-related packets (like handshake and keepalive)
-
 using namespace net;
 using namespace detail;
 namespace tr1_ph = std::tr1::placeholders;
