@@ -10,16 +10,24 @@ using namespace net;
 namespace tr1_ph = std::tr1::placeholders;
 
 class Peer {
-    short port;
+    unsigned short port_;
 
 public:
     Peer(char const* c_port)
-      : port(boost::lexical_cast<short>(c_port)), conn_((('C'+'u')-('B'*'e')/'a'%'t')|0x0101)
+      : conn_((('C'+'u')-('B'*'e')/'a'%'t')|0x0101)
     {                                                  //above is magical number for protocol id
+        try {
+            port_ = boost::lexical_cast<unsigned short>(c_port);
+        } catch( std::exception& e ) {
+            std::cerr << "You assigned an illegal port. Using default: 12345....\n";
+            port_ = 12345;
+        }
+
         showHelp();
-        while( !conn_.start(port) ) {
-            ++port; //it's a cheap way to avoid port conflict, but it works for simple cases.
-            std::cout << "Now new port is: " << port << std::endl;
+
+        while( !conn_.start(port_) ) {
+            ++port_; //it's a cheap way to avoid port conflict, but it works for simple cases.
+            std::cout << "Now new port is: " << port_ << std::endl;
         }
 
         using std::tr1::bind;
@@ -31,7 +39,7 @@ public:
 
     void showHelp() const {
         std::cout << "\nBoost.ASIO Networking testing terminal: \n"
-                  << " (/a) start running on port " << port << "\n"
+                  << " (/a) start running on port " << port_ << "\n"
                   << " (/b) connecting to a host\n"
                   << " (/c) check status\n"
                   << " (/d) disconnect\n"
@@ -83,8 +91,8 @@ public:
 
     void listenTo() {
         if( conn_.isDisconnected() ) {
-            while( !conn_.start(port) )
-                ++port;
+            while( !conn_.start(port_) )
+                ++port_;
         }
     }
 
@@ -108,7 +116,15 @@ public:
 
         if( ip_port.size() >= 2 && all( ip_port[1], is_digit() ) ) {
             listenTo();
-            conn_.connect(ip_port[0].c_str(), boost::lexical_cast<short>(ip_port[1]));
+            unsigned short port;
+            try {
+                port = boost::lexical_cast<unsigned short>(ip_port[1]);
+            }
+            catch (std::exception& e) {
+                std::cerr << e.what() << "\n";
+                return;
+            }
+            conn_.connect(ip_port[0].c_str(), port);
         }
     }
 

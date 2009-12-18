@@ -71,6 +71,7 @@ bool Connection::start(unsigned short const& port) {
     return true;
 }
 
+//This needs to be changed to async form
 bool Connection::connect(char const* ip, unsigned short const& port) {
     using namespace boost::asio::ip;
 
@@ -78,14 +79,13 @@ bool Connection::connect(char const* ip, unsigned short const& port) {
     oss << port;
     udp::resolver resolver(io_);
     udp::resolver::query query(udp::v4(), ip, oss.str());
-    udp::endpoint dest;
-    try {
-        dest = *resolver.resolve(query);
-    }
-    catch( std::exception& e ){
-        std::cerr << e.what() << "\n";
+    boost::system::error_code ec;
+    udp::resolver::iterator dest_iterator = resolver.resolve(query, ec); //This needs to be changed to async form
+    if( ec ) {
+        std::cerr << ec.message() << "\n";
         return false;
     }
+    udp::endpoint dest = *dest_iterator;
 
     using std::tr1::bind;
     socket_.async_connect(dest, bind(&Connection::connect_handler, this, tr1_ph::_1));
@@ -207,9 +207,6 @@ void Connection::connect_handler(boost::system::error_code const& ec) {
         send(HANDSHAKE_CHAR); //this is a handshake packet placeholder
         timer(keepalive_, boost::posix_time::seconds(1),
             std::tr1::bind(&Connection::keepalive_handler, this, tr1_ph::_1) );
-        state_ = Connected;
-        if( connect_cb_ )
-            connect_cb_();
     }
     else {
         std::cerr << "Trace: " << ec.message() << std::endl;
@@ -255,6 +252,10 @@ void Connection::handshake_handler(boost::system::error_code const& ec, std::siz
             setup_handshake();
             return;
         }
+        state_ = Connected; //I decided to move this here, because only when the connection
+        if( connect_cb_ )   //is greeted, we can be sure that this connection is really established.
+            connect_cb_();
+
         std::cerr << "Trace: A peer connected from " << remote_ep_.address().to_string() << ":"
                   << remote_ep_.port() << ", buffer: " << recvbuffer_;
         do_reset_timeout();
