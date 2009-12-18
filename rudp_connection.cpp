@@ -112,16 +112,18 @@ void Connection::disconnect() {
 
 void Connection::send(char packet[]) {
     attach_header(sendbuffer_);
-    int i = /*sizeof(PacketHeader)*/ + sizeof(unsigned short); //if sizeof(packet) > 256 - i then it will overflow
-    int j = 0;
-    while( packet[j] != '\0' && i < 256 ) sendbuffer_[i] = packet[j], ++i, ++j;
-
+    int i = /*sizeof(PacketHeader)*/ + sizeof(unsigned short);
+    int j = 0; //if sizeof(packet) > 256 - i then it will overflow
+    while( packet[j] != '\0' && i < 255 ) {
+        sendbuffer_[i] = packet[j];
+        ++i, ++j;
+    }
     io_.post(std::tr1::bind(&Connection::do_send, this)); //so this will be called in asio_thread_
 }
 
-void Connection::onDisconnect(std::tr1::function<void()> cb)      { disconnect_cb_ = cb; }
-void Connection::onConnect(std::tr1::function<void()> cb)         { connect_cb_ = cb; }
-void Connection::onRecv(std::tr1::function<void(char*)> cb) { recv_cb_ = cb; }
+void Connection::onDisconnect(std::tr1::function<void()> cb) { disconnect_cb_ = cb; }
+void Connection::onConnect(std::tr1::function<void()> cb)    { connect_cb_ = cb; }
+void Connection::onRecv(std::tr1::function<void(char*)> cb)  { recv_cb_ = cb; }
 
 /// **** private methods and handlers ****
 
@@ -133,7 +135,10 @@ void Connection::attach_header(char packet[]) {
 PacketHeader Connection::detach_header(char raw_packet[], char packet[]) {
     int i = /*sizeof(PacketHeader)*/ + sizeof(unsigned short);
     int j = 0;
-    while( raw_packet[i] != '\0' && i < 256 ) packet[j] = raw_packet[i], ++i, ++j;
+    while( raw_packet[i] != '\0' && i < 255 ) {
+        packet[j] = raw_packet[i];
+        ++i, ++j;
+    }
     return PacketHeader();
 }
 

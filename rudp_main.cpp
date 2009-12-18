@@ -47,9 +47,11 @@ public:
 
     bool run() {
         commandPrompt();
-        char cmd[256] = {0};
-        std::cin.getline(cmd, 256);
-        bool stat = processCommand(cmd);
+        char cmd[256]={0};
+        bool stat = std::cin.getline(cmd, 255);
+
+        std::cin.clear();
+        stat = processCommand(cmd);
 
         return stat;
     }
@@ -104,8 +106,10 @@ public:
         using namespace boost::algorithm;
         split( ip_port, in, is_any_of(":") );
 
-        listenTo();
-        conn_.connect(ip_port[0].c_str(), boost::lexical_cast<short>(ip_port[1]));
+        if( ip_port.size() >= 2 && all( ip_port[1], is_digit() ) ) {
+            listenTo();
+            conn_.connect(ip_port[0].c_str(), boost::lexical_cast<short>(ip_port[1]));
+        }
     }
 
     void send(char cmd[]) {
