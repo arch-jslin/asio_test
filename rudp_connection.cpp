@@ -29,7 +29,7 @@ Connection::Connection(unsigned short const& protocol_id)
     :socket_(io_), keep_io_running_( new boost::asio::io_service::work(io_) ),
      heartbeat_(io_), timeout_(io_), keepalive_(io_), recvbuffer_({0}), sendbuffer_({0}),
      out_connected_(false), protocol_id_(protocol_id), HANDSHAKE_CHAR({'\1',0}), KEEPALIVE_CHAR({'\2',0}),
-     state_(Disconnected)
+     dest_ip_(""), dest_port_(0), state_(Disconnected)
 {
     std::cerr << "Trace: Connection object created with id " << protocol_id_ << "\n";
 #ifdef WIN32
@@ -71,29 +71,12 @@ bool Connection::start(unsigned short const& port) {
     return true;
 }
 
-//This needs to be changed to async form
 bool Connection::connect(char const* ip, unsigned short const& port) {
-    using namespace boost::asio::ip;
-
-    std::ostringstream oss;
-    oss << port;
-    udp::resolver resolver(io_);
-    udp::resolver::query query(udp::v4(), ip, oss.str());
-    boost::system::error_code ec;
-    udp::resolver::iterator dest_iterator = resolver.resolve(query, ec); //This needs to be changed to async form
-    if( ec ) {
-        std::cerr << ec.message() << "\n";
-        return false;
+    if( socket_.is_open() && state_ == Listening ) { //weird condition, need check
+        dest_ip_ = ip;
+        dest_port_ = port;
+        io_.post(std::tr1::bind(&Connection::do_connect, this));
     }
-    udp::endpoint dest = *dest_iterator;
-
-    using std::tr1::bind;
-    socket_.async_connect(dest, bind(&Connection::connect_handler, this, tr1_ph::_1));
-
-    timer(timeout_, boost::posix_time::seconds(3),
-        bind(&Connection::timeout_handler, this, tr1_ph::_1) );
-
-    state_ = Connecting;
     return true;
 }
 
@@ -309,6 +292,32 @@ void Connection::do_reset_timeout() {
     timeout_.cancel(); //important, this action will invoke the callback nonetheless.
     timer(timeout_, boost::posix_time::seconds(3),
         std::tr1::bind(&Connection::timeout_handler, this, tr1_ph::_1) );
+}
+
+void Connection::do_connect() {
+    using namespace boost::asio::ip;
+
+    state_ = Connecting;
+
+    std::ostringstream oss;
+    oss << dest_port_;
+    udp::resolver resolver(io_);
+    udp::resolver::query query(udp::v4(), dest_ip_.c_str(), oss.str());
+    boost::system::error_code ec;
+
+    udp::resolver::iterator dest_it = resolver.resolve(query, ec);
+
+    if( ec ) {
+        std::cerr << "Trace: in resolve handler: " << ec.message() << "\n";
+        state_ = Listening;
+        return;
+    }
+    boost::asio::ip::udp::endpoint dest = *dest_it;
+
+    socket_.async_connect(dest, std::tr1::bind(&Connection::connect_handler, this, tr1_ph::_1));
+
+    timer(timeout_, boost::posix_time::seconds(3),
+        bind(&Connection::timeout_handler, this, tr1_ph::_1) );
 }
 
 template <typename Callback>

@@ -60,11 +60,14 @@ protected: //asio handlers
     void timeout_handler(boost::system::error_code const& ec);
     void keepalive_handler(boost::system::error_code const& ec);
     void heartbeat_handler(boost::system::error_code const& ec);
+    void resolve_handler(boost::system::error_code const& ec,
+                         boost::asio::ip::udp::resolver::iterator dest_iterator);
     void connect_handler(boost::system::error_code const& ec);
     void receive_handler(boost::system::error_code const& ec, std::size_t const& size);
     void handshake_handler(boost::system::error_code const& ec, std::size_t const& size);
     void send_handler(boost::system::error_code const& ec, std::size_t const& size);
 
+    void do_connect();
     void do_socket_close();
     void do_send();
     void do_reset_timeout();
@@ -92,6 +95,8 @@ protected: //members
     bool out_connected_;
     unsigned short protocol_id_;
     char HANDSHAKE_CHAR[2], KEEPALIVE_CHAR[2];
+    std::string dest_ip_;
+    unsigned short dest_port_;
 
     enum State{ Disconnected, Listening, Connecting, Connected };
     State state_;
