@@ -138,7 +138,6 @@ public:
     }
 
 private:
-
     detail::Connection conn_;
 };
 
