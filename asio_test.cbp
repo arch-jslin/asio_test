@@ -21,9 +21,9 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="boost_date_time-mgw44-mt-1_40" />
-					<Add library="boost_system-mgw44-mt-1_40" />
-					<Add library="boost_thread-mgw44-mt-1_40" />
+					<Add library="boost_date_time-mgw45-mt-1_43" />
+					<Add library="boost_system-mgw45-mt-1_43" />
+					<Add library="boost_thread-mgw45-mt-1_43" />
 					<Add library="wsock32" />
 					<Add library="ws2_32" />
 				</Linker>
