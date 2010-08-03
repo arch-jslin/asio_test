@@ -23,14 +23,19 @@ long Connection::GlobalMillisecond = 0;   //these will be extracted to upper sco
 LARGE_INTEGER Connection::last_counter_;  //these will be extracted to upper scope
 #endif
 
+const char Connection::HANDSHAKE_CHAR[2] = {'\1', 0};
+const char Connection::KEEPALIVE_CHAR[2] = {'\2', 0};
+
 /// *********** public methods ***********
 
 Connection::Connection(unsigned short const& protocol_id)
-    :socket_(io_), keep_io_running_( new boost::asio::io_service::work(io_) ),
-     heartbeat_(io_), timeout_(io_), keepalive_(io_), recvbuffer_({0}), sendbuffer_({0}),
-     out_connected_(false), protocol_id_(protocol_id), HANDSHAKE_CHAR({'\1',0}), KEEPALIVE_CHAR({'\2',0}),
-     dest_ip_(""), dest_port_(0), state_(Disconnected)
+    :keep_io_running_( new boost::asio::io_service::work(io_) ), socket_(io_),
+     heartbeat_(io_), timeout_(io_), keepalive_(io_), out_connected_(false),
+     protocol_id_(protocol_id), dest_ip_(""), dest_port_(0), state_(Disconnected)
 {
+    flush(sendbuffer_, 256);
+    flush(recvbuffer_, 256);
+
     std::cerr << "Trace: Connection object created with id " << protocol_id_ << "\n";
 #ifdef WIN32
     QueryPerformanceCounter(&last_counter_);
@@ -72,10 +77,13 @@ bool Connection::start(unsigned short const& port) {
 }
 
 bool Connection::connect(char const* ip, unsigned short const& port) {
+    std::cerr << "Trace: Trying to connect to " << ip << ", port " << port << "\n";
     if( socket_.is_open() && state_ == Listening ) { //weird condition, need check
         dest_ip_ = ip;
         dest_port_ = port;
         io_.post(std::tr1::bind(&Connection::do_connect, this));
+    } else {
+        std::cerr << "Trace: Socket is already occupied. Can't use this socket as out-going port.\n";
     }
     return true;
 }
@@ -93,7 +101,7 @@ void Connection::disconnect() {
     }
 }
 
-void Connection::send(char packet[]) {
+void Connection::send(char const packet[]) {
     attach_header(sendbuffer_);
     int i = /*sizeof(PacketHeader)*/ + sizeof(unsigned short);
     int j = 0; //if sizeof(packet) > 256 - i then it will overflow
@@ -139,7 +147,7 @@ void Connection::clean_up() {
 }
 
 void Connection::flush(char* buffer_to_be_flushed, size_t const& size) {
-    for( int i = 0; i < size; ++i ) buffer_to_be_flushed[i] = 0;
+    for( unsigned int i = 0; i < size; ++i ) buffer_to_be_flushed[i] = 0;
 }
 
 void Connection::setup_handshake() {
@@ -235,10 +243,6 @@ void Connection::handshake_handler(boost::system::error_code const& ec, std::siz
             setup_handshake();
             return;
         }
-        state_ = Connected; //I decided to move this here, because only when the connection
-        if( connect_cb_ )   //is greeted, we can be sure that this connection is really established.
-            connect_cb_();
-
         std::cerr << "Trace: A peer connected from " << remote_ep_.address().to_string() << ":"
                   << remote_ep_.port() << ", buffer: " << recvbuffer_;
         do_reset_timeout();
@@ -246,7 +250,10 @@ void Connection::handshake_handler(boost::system::error_code const& ec, std::siz
         if( !out_connected_ )
             connect(remote_ep_.address().to_string().c_str(), remote_ep_.port());
 
-        std::cerr << ", bytes_transferred: " << size << "\n";
+        state_ = Connected; //I decided to move this here, because only when the connection
+        if( connect_cb_ )   //is greeted, we can be sure that this connection is really established.
+            connect_cb_();
+
         setup_receive();
     }
     else if( ec == boost::asio::error::operation_aborted )

@@ -35,7 +35,7 @@ public:
     bool connect(char const* ip, unsigned short const& port);
     void disconnect();
 
-    void send(char packet[]);
+    void send(char const packet[]);
 //    void sendReliable(char packet[]);
 
     void onConnect(std::tr1::function<void()> cb);
@@ -94,7 +94,7 @@ protected: //members
     char sendbuffer_[256];
     bool out_connected_;
     unsigned short protocol_id_;
-    char HANDSHAKE_CHAR[2], KEEPALIVE_CHAR[2];
+    static char const HANDSHAKE_CHAR[2], KEEPALIVE_CHAR[2];
     std::string dest_ip_;
     unsigned short dest_port_;
 
